@@ -114,61 +114,63 @@ const FlashcardDeck: React.FC = () => {
   const getIncorrectCards = () => shuffledDeck.filter(card => answeredCards[card.id] === false);
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <Link href="/" className="text-blue-500 hover:underline mb-4 inline-block">Back to Home</Link>
-      <div className="mb-4">
-        <label htmlFor="partOfSpeech" className="block mb-2">Select Part of Speech: </label>
-        <select 
-          id="partOfSpeech" 
-          value={selectedPartOfSpeech} 
-          onChange={handlePartOfSpeechChange}
-          className="w-full p-2 border rounded"
-        >
-          {partsOfSpeech.map(pos => (
-            <option key={pos} value={pos}>{pos}</option>
-          ))}
-        </select>
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 text-white p-8">
+      <div className="max-w-4xl mx-auto">
+        <Link href="/" className="text-white hover:text-gray-200 mb-8 inline-block">&larr; Back to Home</Link>
+        <h1 className="text-4xl font-bold mb-8 text-center">Flashcard Practice</h1>
+        <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-xl p-6 shadow-lg mb-8">
+          <label htmlFor="partOfSpeech" className="block mb-2 text-lg">Select Part of Speech: </label>
+          <select 
+            id="partOfSpeech" 
+            value={selectedPartOfSpeech} 
+            onChange={handlePartOfSpeechChange}
+            className="w-full p-2 border rounded text-gray-800"
+          >
+            {partsOfSpeech.map(pos => (
+              <option key={pos} value={pos}>{pos}</option>
+            ))}
+          </select>
+        </div>
+        <Flashcard 
+          card={shuffledDeck[currentCardIndex]} 
+          isFlipped={isFlipped} 
+          onFlip={handleFlip} 
+        />
+        <div className="flex justify-center mt-6 space-x-4">
+          <button onClick={handleFlip} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full transition duration-300">
+            Flip Card
+          </button>
+          <button onClick={() => handleAnswer(true)} className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition duration-300">Correct</button>
+          <button onClick={() => handleAnswer(false)} className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full transition duration-300">Incorrect</button>
+        </div>
+        <div className="flex justify-between mt-6">
+          <button onClick={previousCard} className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-full transition duration-300">Previous</button>
+          <button onClick={nextCard} className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-full transition duration-300">Next</button>
+        </div>
+        <div className="mt-8 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-xl p-6 shadow-lg">
+          <h2 className="text-2xl font-bold mb-4">Statistics</h2>
+          <p>Correct: {correctCount}</p>
+          <p>Incorrect: {incorrectCount}</p>
+          <p>Skipped: {skippedCount}</p>
+          <p>Total Cards Viewed: {totalCardsViewed}</p>
+          <p>Total {selectedPartOfSpeech} Cards: {shuffledDeck.length}</p>
+        </div>
+        <button onClick={shuffleDeck} className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-full transition duration-300 w-full">Reset Deck</button>
+        <div className="mt-6 flex justify-center space-x-4">
+          <button onClick={() => setShowCorrectList(!showCorrectList)} className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition duration-300">
+            {showCorrectList ? 'Hide' : 'Show'} Correct Cards
+          </button>
+          <button onClick={() => setShowIncorrectList(!showIncorrectList)} className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full transition duration-300">
+            {showIncorrectList ? 'Hide' : 'Show'} Incorrect Cards
+          </button>
+        </div>
+        {showCorrectList && (
+          <ReviewList title="Correct Cards" cards={getCorrectCards()} />
+        )}
+        {showIncorrectList && (
+          <ReviewList title="Incorrect Cards" cards={getIncorrectCards()} />
+        )}
       </div>
-      <Flashcard 
-        card={shuffledDeck[currentCardIndex]} 
-        isFlipped={isFlipped} 
-        onFlip={handleFlip} 
-      />
-      <div className="flex justify-center mt-4">
-        <button onClick={handleFlip} className="bg-blue-500 text-white px-4 py-2 rounded">
-          Flip Card
-        </button>
-      </div>
-      <div className="flex justify-between mt-4">
-        <button onClick={previousCard} className="bg-blue-500 text-white px-4 py-2 rounded">Previous</button>
-        <button onClick={nextCard} className="bg-blue-500 text-white px-4 py-2 rounded">Next</button>
-      </div>
-      <div className="flex justify-center mt-4 space-x-4">
-        <button onClick={() => handleAnswer(true)} className="bg-green-500 text-white px-4 py-2 rounded">Correct</button>
-        <button onClick={() => handleAnswer(false)} className="bg-red-500 text-white px-4 py-2 rounded">Incorrect</button>
-      </div>
-      <div className="mt-6 text-center">
-        <p>Correct: {correctCount}</p>
-        <p>Incorrect: {incorrectCount}</p>
-        <p>Skipped: {skippedCount}</p>
-        <p>Total Cards Viewed: {totalCardsViewed}</p>
-        <p>Total {selectedPartOfSpeech} Cards: {shuffledDeck.length}</p>
-      </div>
-      <button onClick={shuffleDeck} className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded w-full">Reset Deck</button>
-      <div className="mt-4 flex justify-center space-x-4">
-        <button onClick={() => setShowCorrectList(!showCorrectList)} className="bg-green-500 text-white px-4 py-2 rounded">
-          {showCorrectList ? 'Hide' : 'Show'} Correct Cards
-        </button>
-        <button onClick={() => setShowIncorrectList(!showIncorrectList)} className="bg-red-500 text-white px-4 py-2 rounded">
-          {showIncorrectList ? 'Hide' : 'Show'} Incorrect Cards
-        </button>
-      </div>
-      {showCorrectList && (
-        <ReviewList title="Correct Cards" cards={getCorrectCards()} />
-      )}
-      {showIncorrectList && (
-        <ReviewList title="Incorrect Cards" cards={getIncorrectCards()} />
-      )}
     </div>
   );
 };
