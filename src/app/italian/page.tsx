@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import vocabularyData from '../data/vocabulary';
+import vocabularyData from '../../data/vocabulary';
 
 const ModuleSelector: React.FC = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -71,32 +71,30 @@ const ModuleSelector: React.FC = () => {
         {!isSubmitted ? (
           <>
             <h2 className="text-3xl font-bold mb-6 text-center">Select Your Learning Focus</h2>
-            <div className="mb-8">
+            <div className="mb-8 space-y-2">
               <button
                 onClick={handleGeneralLearning}
-                className={`mb-4 px-4 py-2 rounded-full ${
+                className={`w-full px-4 py-2 rounded-full ${
                   selectedCategories.length === 0
-                    ? 'bg-green-500 text-white'
+                    ? 'bg-yellow-500 text-white'
                     : 'bg-white bg-opacity-20 text-white'
                 }`}
               >
                 General Learning
               </button>
-              <div className="flex flex-wrap gap-2">
-                {allCategories.map((category, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleCategoryToggle(category)}
-                    className={`px-4 py-2 rounded-full ${
-                      selectedCategories.includes(category)
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-white bg-opacity-20 text-white'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
+              {allCategories.map((category, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleCategoryToggle(category)}
+                  className={`w-full px-4 py-2 rounded-full ${
+                    selectedCategories.includes(category)
+                      ? 'bg-yellow-500 text-white'
+                      : 'bg-white bg-opacity-20 text-white'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
             </div>
             <button
               onClick={handleSubmit}

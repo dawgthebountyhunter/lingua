@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import vocabularyData from '../data/vocabulary';
 
 interface Sentence {
@@ -22,6 +24,9 @@ const encouragements = [
 ];
 
 const SentencePractice: React.FC = () => {
+  const searchParams = useSearchParams();
+  const initialCategories = searchParams.get('categories')?.split(',').filter(Boolean) || [];
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
   const [currentSentence, setCurrentSentence] = useState<Sentence | null>(null);
   const [userInput, setUserInput] = useState('');
   const [feedback, setFeedback] = useState('');
@@ -31,16 +36,26 @@ const SentencePractice: React.FC = () => {
 
   useEffect(() => {
     generateNewSentence();
-  }, []);
+  }, [selectedCategories]);
 
   const generateNewSentence = () => {
-    const allSentences = vocabularyData.flatMap(item => 
+    const filteredVocabulary = selectedCategories.length === 0
+      ? vocabularyData
+      : vocabularyData.filter(item => selectedCategories.includes(item.category));
+
+    const allSentences = filteredVocabulary.flatMap(item => 
       item.examples.map(example => ({
         italian: example.italian,
         english: example.english,
         italianWords: example.italian.split(' ')
       }))
     );
+
+    if (allSentences.length === 0) {
+      setCurrentSentence(null);
+      setFeedback('No sentences available for the selected categories.');
+      return;
+    }
 
     const randomSentence = allSentences[Math.floor(Math.random() * allSentences.length)];
     const blankIndex = Math.floor(Math.random() * randomSentence.italianWords.length);
@@ -55,19 +70,17 @@ const SentencePractice: React.FC = () => {
       missingWord: missingWord,
       blankIndex: blankIndex
     });
-
     setUserInput('');
     setFeedback('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (userInput.toLowerCase().trim() === currentSentence?.missingWord.toLowerCase()) {
-      const randomEncouragement = encouragements[Math.floor(Math.random() * encouragements.length)];
-      setFeedback(`Correct! ${randomEncouragement}`);
+    if (currentSentence && userInput.toLowerCase().trim() === currentSentence.missingWord.toLowerCase()) {
+      setFeedback(encouragements[Math.floor(Math.random() * encouragements.length)]);
       setCorrectCount(prev => prev + 1);
     } else {
-      setFeedback(`Incorrect. The correct word is "${currentSentence?.missingWord}".`);
+      setFeedback(`Sorry, the correct word is "${currentSentence?.missingWord}".`);
       setIncorrectCount(prev => prev + 1);
     }
   };
@@ -80,7 +93,14 @@ const SentencePractice: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-center">Sentence Practice</h1>
+        <Link href="/italian" className="text-white hover:text-gray-200 mb-8 inline-block">&larr; Back to Italian</Link>
+        <h1 className="text-4xl font-bold mb-4 text-center">Sentence Practice</h1>
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-semibold mb-2">Selected Categories:</h2>
+          <p className="text-lg">
+            {selectedCategories.length > 0 ? selectedCategories.join(', ') : 'General Learning (All Categories)'}
+          </p>
+        </div>
         {currentSentence && (
           <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-xl p-6 shadow-lg">
             <p className="text-2xl mb-4">{currentSentence.italian}</p>

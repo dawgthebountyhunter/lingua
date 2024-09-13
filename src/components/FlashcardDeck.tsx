@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import Flashcard from './Flashcard';
 import ReviewList from './ReviewList';
 import vocabularyData from '../data/vocabulary';
@@ -13,9 +14,14 @@ interface Card {
   partOfSpeech: string;
   difficulty: number;
   examples: { italian: string; english: string }[];
+  tags: string[];
+  category: string;
 }
 
 const FlashcardDeck: React.FC = () => {
+  const searchParams = useSearchParams();
+  const initialCategories = searchParams.get('categories')?.split(',').filter(Boolean) || [];
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
@@ -24,16 +30,13 @@ const FlashcardDeck: React.FC = () => {
   const [answeredCards, setAnsweredCards] = useState<{[key: string]: boolean}>({});
   const [shuffledDeck, setShuffledDeck] = useState<Card[]>([]);
   const [totalCardsViewed, setTotalCardsViewed] = useState(0);
-  const [selectedPartOfSpeech, setSelectedPartOfSpeech] = useState('all');
   const [showCorrectList, setShowCorrectList] = useState(false);
   const [showIncorrectList, setShowIncorrectList] = useState(false);
 
-  const partsOfSpeech = ['all', ...Array.from(new Set(vocabularyData.map(card => card.partOfSpeech)))];
-
   const shuffleDeck = useCallback(() => {
-    const filteredDeck = selectedPartOfSpeech === 'all'
+    const filteredDeck = selectedCategories.length === 0
       ? vocabularyData
-      : vocabularyData.filter(card => card.partOfSpeech === selectedPartOfSpeech);
+      : vocabularyData.filter(card => selectedCategories.includes(card.category));
     const shuffled = [...filteredDeck].sort(() => Math.random() - 0.5);
     setShuffledDeck(shuffled);
     setCurrentCardIndex(0);
@@ -43,14 +46,14 @@ const FlashcardDeck: React.FC = () => {
     setSkippedCount(0);
     setAnsweredCards({});
     setIsFlipped(false);
-  }, [selectedPartOfSpeech]);
+  }, [selectedCategories]);
 
   useEffect(() => {
     shuffleDeck();
   }, [shuffleDeck]);
 
   if (shuffledDeck.length === 0) {
-    return <div className="text-center mt-8">No flashcards available for the selected part of speech.</div>;
+    return <div className="text-center mt-8">No flashcards available for the selected categories.</div>;
   }
 
   const nextCard = () => {
@@ -59,7 +62,7 @@ const FlashcardDeck: React.FC = () => {
       setTimeout(() => {
         setCurrentCardIndex((prevIndex) => (prevIndex + 1) % shuffledDeck.length);
         setTotalCardsViewed(prev => prev + 1);
-      }, 300); // Half the duration of the flip animation
+      }, 300);
     } else {
       setCurrentCardIndex((prevIndex) => (prevIndex + 1) % shuffledDeck.length);
       setTotalCardsViewed(prev => prev + 1);
@@ -76,7 +79,7 @@ const FlashcardDeck: React.FC = () => {
         setCurrentCardIndex((prevIndex) => 
           (prevIndex - 1 + shuffledDeck.length) % shuffledDeck.length
         );
-      }, 300); // Half the duration of the flip animation
+      }, 300);
     } else {
       setCurrentCardIndex((prevIndex) => 
         (prevIndex - 1 + shuffledDeck.length) % shuffledDeck.length
@@ -100,14 +103,10 @@ const FlashcardDeck: React.FC = () => {
       setIsFlipped(false);
       setTimeout(() => {
         nextCard();
-      }, 300); // Half the duration of the flip animation
+      }, 300);
     } else {
       nextCard();
     }
-  };
-
-  const handlePartOfSpeechChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedPartOfSpeech(e.target.value);
   };
 
   const getCorrectCards = () => shuffledDeck.filter(card => answeredCards[card.id] === true);
@@ -116,20 +115,13 @@ const FlashcardDeck: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <Link href="/" className="text-white hover:text-gray-200 mb-8 inline-block">&larr; Back to Home</Link>
-        <h1 className="text-4xl font-bold mb-8 text-center">Flashcard Practice</h1>
-        <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-xl p-6 shadow-lg mb-8">
-          <label htmlFor="partOfSpeech" className="block mb-2 text-lg">Select Part of Speech: </label>
-          <select 
-            id="partOfSpeech" 
-            value={selectedPartOfSpeech} 
-            onChange={handlePartOfSpeechChange}
-            className="w-full p-2 border rounded text-gray-800"
-          >
-            {partsOfSpeech.map(pos => (
-              <option key={pos} value={pos}>{pos}</option>
-            ))}
-          </select>
+        <Link href="/italian" className="text-white hover:text-gray-200 mb-8 inline-block">&larr; Back to Italian</Link>
+        <h1 className="text-4xl font-bold mb-4 text-center">Flashcard Practice</h1>
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-semibold mb-2">Selected Categories:</h2>
+          <p className="text-lg">
+            {selectedCategories.length > 0 ? selectedCategories.join(', ') : 'General Learning (All Categories)'}
+          </p>
         </div>
         <Flashcard 
           card={shuffledDeck[currentCardIndex]} 
@@ -153,7 +145,7 @@ const FlashcardDeck: React.FC = () => {
           <p>Incorrect: {incorrectCount}</p>
           <p>Skipped: {skippedCount}</p>
           <p>Total Cards Viewed: {totalCardsViewed}</p>
-          <p>Total {selectedPartOfSpeech} Cards: {shuffledDeck.length}</p>
+          <p>Total Cards in Deck: {shuffledDeck.length}</p>
         </div>
         <button onClick={shuffleDeck} className="mt-6 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-full transition duration-300 w-full">Reset Deck</button>
         <div className="mt-6 flex justify-center space-x-4">
@@ -165,10 +157,18 @@ const FlashcardDeck: React.FC = () => {
           </button>
         </div>
         {showCorrectList && (
-          <ReviewList title="Correct Cards" cards={getCorrectCards()} />
+          <ReviewList
+            title="Correct Cards"
+            cards={getCorrectCards()}
+            onClose={() => setShowCorrectList(false)}
+          />
         )}
         {showIncorrectList && (
-          <ReviewList title="Incorrect Cards" cards={getIncorrectCards()} />
+          <ReviewList
+            title="Incorrect Cards"
+            cards={getIncorrectCards()}
+            onClose={() => setShowIncorrectList(false)}
+          />
         )}
       </div>
     </div>
