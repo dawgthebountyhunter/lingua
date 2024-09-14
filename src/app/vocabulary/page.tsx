@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import FlashcardDeck from '../../components/FlashcardDeck';
 import Link from 'next/link';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import vocabularyData from '../data/vocabulary';
@@ -24,7 +24,7 @@ const encouragements = [
   "Mussolini would be proud!",
 ];
 
-const SentencePractice: React.FC = () => {
+const SentencePracticeContent: React.FC = () => {
   const searchParams = useSearchParams();
   const initialCategories = searchParams?.get('categories')?.split(',').filter(Boolean) ?? []; 
   const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
@@ -136,6 +136,14 @@ const SentencePractice: React.FC = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const SentencePractice: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SentencePracticeContent />
+    </Suspense>
   );
 };
 

@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Flashcard from './Flashcard';
 import ReviewList from './ReviewList';
 import vocabularyData from '../data/vocabulary';
+import Link from 'next/link';
 
 interface Card {
   id: string;
@@ -18,9 +18,7 @@ interface Card {
   category: string;
 }
 
-
-
-const FlashcardDeck: React.FC = () => {
+const FlashcardDeckContent: React.FC = () => {
   const searchParams = useSearchParams();
   const initialCategories = searchParams?.get('categories')?.split(',').filter(Boolean) || [];
   const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
@@ -174,6 +172,14 @@ const FlashcardDeck: React.FC = () => {
         )}
       </div>
     </div>
+  );
+};
+
+const FlashcardDeck: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FlashcardDeckContent />
+    </Suspense>
   );
 };
 
