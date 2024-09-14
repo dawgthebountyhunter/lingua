@@ -25,7 +25,7 @@ const encouragements = [
 
 const SentencePractice: React.FC = () => {
   const searchParams = useSearchParams();
-  const initialCategories = searchParams.get('categories')?.split(',').filter(Boolean) || [];
+  const initialCategories = searchParams?.get('categories')?.split(',').filter(Boolean) ?? []; 
   const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
   const [currentSentence, setCurrentSentence] = useState<Sentence | null>(null);
   const [userInput, setUserInput] = useState('');

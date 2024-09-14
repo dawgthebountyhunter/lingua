@@ -18,9 +18,15 @@ interface Card {
   category: string;
 }
 
+interface ReviewListProps {
+  title: string;
+  cards: Card[];
+  onClose: () => void;
+}
+
 const FlashcardDeck: React.FC = () => {
   const searchParams = useSearchParams();
-  const initialCategories = searchParams.get('categories')?.split(',').filter(Boolean) || [];
+  const initialCategories = searchParams?.get('categories')?.split(',').filter(Boolean) || [];
   const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);

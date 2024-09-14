@@ -9,6 +9,7 @@ interface ReviewListProps {
     italianWord: string;
     englishTranslation: string;
   }[];
+  onClose: () => void;
 }
 
 const ReviewList: React.FC<ReviewListProps> = ({ title, cards }) => {
