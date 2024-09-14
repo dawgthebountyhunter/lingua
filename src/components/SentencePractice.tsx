@@ -21,6 +21,7 @@ const encouragements = [
   "You're on a roll like a cannoli!",
   "Fantastico!",
   "You're as sharp as Parmigiano-Reggiano!",
+  "Mussolini would be proud!",
 ];
 
 const SentencePractice: React.FC = () => {
@@ -118,7 +119,7 @@ const SentencePractice: React.FC = () => {
                   Submit
                 </button>
                 <button type="button" onClick={handleSkip} className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-full transition duration-300">
-                  I don't know
+                  "I don't know"
                 </button>
               </div>
             </form>

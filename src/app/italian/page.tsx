@@ -2,13 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import vocabularyData from '../../data/vocabulary';
 
 const ModuleSelector: React.FC = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const router = useRouter();
 
   const modules = [
     { 

@@ -18,11 +18,7 @@ interface Card {
   category: string;
 }
 
-interface ReviewListProps {
-  title: string;
-  cards: Card[];
-  onClose: () => void;
-}
+
 
 const FlashcardDeck: React.FC = () => {
   const searchParams = useSearchParams();

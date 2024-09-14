@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { gameBoards, Difficulty, WordSet, GameBoard } from '../data/ConnectionsBoards';
+import { gameBoards, Difficulty, WordSet } from '../data/ConnectionsBoards';
 
 const Notification = ({ message, isVisible, onHide }: { message: string, isVisible: boolean, onHide: () => void }) => {
   useEffect(() => {
