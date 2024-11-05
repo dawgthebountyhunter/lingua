@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "rich-torus-436004-s6",
+  "private_key_id": "177c884b87f06b0f405f25c1ec803414a74a18ec",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCtZGZ47S5T/jeN\nf4SW611hGIZdkyQ1vBcSKfNeIAO7lQ4XJjyfVFjvJg0GTdgqEnzxb4/flbnQRiJA\ne3iPIuudnLUWcIR78JzeBmj05fq0XepofuMiXwJY2/s9I2XIVOI5WrfR5W8+mgxU\necDTtxifObbm2H74Ki44i09v4gmitIVyTpSNh9F7hmhm82ZgwTqfcqIQ+YePbEcc\nsMAzPzg4E1ksq83UikoaTi4fC3K8QugLZ8Pcwf5nRJDW7BHVgJpYuehFFulvOMPr\n0cT4VlSxIPgCAsQrbofGBZ2sGDvtuH8y4KZrl5lyy/iifUPw35R+wWUbm6fZL1cp\nCz+s/JY5AgMBAAECggEADkxmHGD/teaz9U/PkuP2G3qKowcOIH3CH8n0kx2b/TEn\nnC5Xp7Jsko0OXCeZdK+5XK4M3NzTmbqc2rkr2g7gw+qvLrpo3HEdOHxqFY7s/4hy\nmvsitxwDXSlH1LT5cN2aGa1y1OThCXYp3+H57iOOTNwVKoBuKQAOd3R6gKEQ1xk9\nzhwEunsdpihMNumUkq6CK5JrgpdkLtq3XNG+kXjlxITBcS6tcjGLyUmZsCRlko8g\nPIomw56pDRiUKd5q8MkgoxI5YB0lxyVxpmUIdsnxQNiQwI0YYOB5LHago6XFIcuA\n/AZ/FZBkB+Ke3xFhWvw0Jdh9AgUpdDhGE/wvZR5P4QKBgQDewt2oYjHUOj5gu2kr\nCY025JoYJMFjXf2QFhjUR4/r3arFEPhmCR7JBh7yaVk7stIYKHuW0AAwXP1DeovM\nHCGK3CjCI+M8V4vNkHD6ON1fllCnRXUnsLmcpSPQSKTnoEXjS1Ef7oP8mGri1jcH\nU02IiU5xkQzqxO60hsCQqeV9WQKBgQDHQ7bq/zaNw9U7NBvSOmqt9WC7kJ/FleOi\nlxr5KvQhwS4xMVlEl/vEfiwSkG4zXiyp43wFdc0r1iGDWihfxHbcdfKkkjwwn1L4\niB8Ob1QaMuRG2sUehsHfGwqYEUmMZW8E97hmTewDfRi1/DMspAiX32p9tdtOUXLK\neIwSB1Bj4QKBgQC+z3pgxqPaH33ZDA9cvxTIJW7dKXbBr/wHlPX1t8rPBhRGM3Ai\nrsNA/E475QN7gIQ4D0019LuEsdJ7H5hp4NrWgBklmuoFgRQOpCAyJc1yGGbDsVpW\nAiorxMT1n5Qpl/7lYFmAGaXTE5fS8B042CE8yCh6XP4Mh13VIuwFvpIGGQKBgAeK\nWHGsFrRmpLsIzcS20TKkBnUSk/k2ItcUQMENDw/373eNFoOx/KUC4UgSjxkCh04m\nfZr3SjxObhY6Yyy8koLlM7lmj0CHxuwAuqwhKl2Tb2/+91agYtW+gDgg71eQvxLB\nDQlSCYxYP4cjdAxMaMbWfYEkUJg2HNHsneBQxooBAoGBANswpFjNJtaD4DCSuQUz\nKgJ/Xx56xVlZ7e6KGZvtMtlYnnxZrRMvTZPNSq/R+Y3UYk/BC61F8o7zyT3poQsF\nBxG6HJMLW+z71K7x4Y7qhVB+dWkOgsNBdQKxAglxV6pX+TDYLDq72cCmVQ/1+gsO\nKHfV3IWflh7BExTcpQfwZgUS\n-----END PRIVATE KEY-----\n",
+  "client_email": "lingua-api@rich-torus-436004-s6.iam.gserviceaccount.com",
+  "client_id": "107599990833853389230",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/lingua-api%40rich-torus-436004-s6.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
