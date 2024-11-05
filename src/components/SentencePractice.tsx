@@ -99,21 +99,16 @@ const SentencePracticeContent: React.FC = () => {
 
   const handleTranslate = async () => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_GOOGLE_TRANSLATE_API_ENDPOINT}?key=${process.env.NEXT_PUBLIC_GOOGLE_TRANSLATE_API_KEY}`,
-        {
-          q: newSentence,
-          target: 'it',
-        }
-      );
-      setTranslatedSentence(response.data.data.translations[0].translatedText);
+      const response = await axios.post('/api/translate', {
+        text: newSentence,
+        targetLanguage: 'it'
+      });
+      setTranslatedSentence(response.data.translation);
     } catch (error) {
       console.error("Error translating sentence:", error);
       setFeedback("Error translating sentence.");
     }
   };
-
-  console.log("API Key:", process.env.NEXT_PUBLIC_GOOGLE_TRANSLATE_API_KEY);
 
   const handleLogSentence = () => {
     // Logic to log the sentence and select categories
