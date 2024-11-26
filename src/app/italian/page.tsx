@@ -27,6 +27,12 @@ const ModuleSelector: React.FC = () => {
       icon: '🎮',
       description: 'Put your learning to the test with fun games.'
     },
+    { 
+      name: 'User Content', 
+      path: '/italian/user-content', 
+      icon: '📝',
+      description: 'View and manage your saved translations.'
+    },
   ];
 
   const allCategories = Array.from(new Set(vocabularyData.map(item => item.category)));
