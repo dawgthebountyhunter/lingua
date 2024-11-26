@@ -12,7 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         {
           model: req.body.model,
           max_tokens: req.body.max_tokens,
-          messages: req.body.messages,
+          system: req.body.messages.find((m: { role: string; content: string }) => m.role === 'system')?.content,
+          messages: req.body.messages.filter((m: { role: string; content: string }) => m.role !== 'system'),
         },
         {
           headers: {

@@ -38,6 +38,8 @@ const SentencePracticeContent: React.FC = () => {
   const [mode, setMode] = useState<'existing' | 'new'>('existing'); // New state for mode
   const [newSentence, setNewSentence] = useState<string>(''); // State for new sentence input
   const [translatedSentence, setTranslatedSentence] = useState<string>(''); // State for translated sentence
+  const [isStoring, setIsStoring] = useState(false);
+  const [selectedNewCategories, setSelectedNewCategories] = useState<string[]>([]);
 
   useEffect(() => {
     if (mode === 'existing') {
@@ -110,11 +112,29 @@ const SentencePracticeContent: React.FC = () => {
     }
   };
 
-  const handleLogSentence = () => {
-    // Logic to log the sentence and select categories
-    console.log("Logging sentence:", newSentence);
-    console.log("Selected categories:", selectedCategories);
-    // You can implement a modal or dropdown to select categories here
+  const handleLogSentence = async () => {
+    try {
+      setIsStoring(true);
+      const response = await axios.post('/api/sentences', {
+        english: newSentence,
+        italian: translatedSentence,
+        categories: selectedNewCategories
+      });
+
+      if (response.data.success) {
+        setFeedback('Sentence stored successfully!');
+        setNewSentence('');
+        setTranslatedSentence('');
+        setSelectedNewCategories([]);
+      } else {
+        setFeedback('Failed to store sentence.');
+      }
+    } catch (error) {
+      console.error('Error storing sentence:', error);
+      setFeedback('Error storing sentence.');
+    } finally {
+      setIsStoring(false);
+    }
   };
 
   return (
@@ -188,8 +208,38 @@ const SentencePracticeContent: React.FC = () => {
             {translatedSentence && (
               <div className="mt-4">
                 <p className="text-lg">Translated Sentence: <strong>{translatedSentence}</strong></p>
-                <button onClick={handleLogSentence} className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition duration-300 mt-2">
-                  Log Sentence
+                
+                <div className="mt-4">
+                  <h3 className="text-lg mb-2">Select Categories:</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {vocabularyData.map(category => (
+                      <button
+                        key={category.category}
+                        onClick={() => setSelectedNewCategories(prev => 
+                          prev.includes(category.category)
+                            ? prev.filter(cat => cat !== category.category)
+                            : [...prev, category.category]
+                        )}
+                        className={`px-3 py-1 rounded ${
+                          selectedNewCategories.includes(category.category)
+                            ? 'bg-blue-600'
+                            : 'bg-blue-400'
+                        }`}
+                      >
+                        {category.category}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button 
+                  onClick={handleLogSentence} 
+                  disabled={isStoring || selectedNewCategories.length === 0}
+                  className={`bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition duration-300 mt-4 ${
+                    (isStoring || selectedNewCategories.length === 0) ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  {isStoring ? 'Storing...' : 'Store Sentence'}
                 </button>
               </div>
             )}
