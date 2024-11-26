@@ -6,6 +6,7 @@ import Flashcard from './Flashcard';
 import ReviewList from './ReviewList';
 import vocabularyData from '../data/vocabulary';
 import Link from 'next/link';
+import axios from 'axios';
 
 interface Card {
   id: string;
@@ -18,7 +19,11 @@ interface Card {
   category: string;
 }
 
-const FlashcardDeckContent: React.FC = () => {
+interface FlashcardDeckProps {
+  mode: 'regular' | 'stored';
+}
+
+const FlashcardDeckContent: React.FC<FlashcardDeckProps> = ({ mode }) => {
   const searchParams = useSearchParams();
   const initialCategories = searchParams?.get('categories')?.split(',').filter(Boolean) || [];
   const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
@@ -32,11 +37,40 @@ const FlashcardDeckContent: React.FC = () => {
   const [totalCardsViewed, setTotalCardsViewed] = useState(0);
   const [showCorrectList, setShowCorrectList] = useState(false);
   const [showIncorrectList, setShowIncorrectList] = useState(false);
+  const [storedSentences, setStoredSentences] = useState<Card[]>([]);
+
+  const fetchStoredSentences = async () => {
+    try {
+      const response = await axios.get('/api/sentences');
+      if (response.data.success) {
+        const formattedSentences = response.data.sentences.map((sentence: any) => ({
+          id: sentence.id.toString(),
+          italianWord: sentence.italian_text,
+          englishTranslation: sentence.english_text,
+          partOfSpeech: 'sentence',
+          difficulty: 1,
+          examples: [],
+          tags: [],
+          category: sentence.categories[0] || 'Stored'
+        }));
+        setStoredSentences(formattedSentences);
+      }
+    } catch (error) {
+      console.error('Error fetching stored sentences:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (mode === 'stored') {
+      fetchStoredSentences();
+    }
+  }, [mode]);
 
   const shuffleDeck = useCallback(() => {
+    const sourceData = mode === 'stored' ? storedSentences : vocabularyData;
     const filteredDeck = selectedCategories.length === 0
-      ? vocabularyData
-      : vocabularyData.filter(card => selectedCategories.includes(card.category));
+      ? sourceData
+      : sourceData.filter(card => selectedCategories.includes(card.category));
     const shuffled = [...filteredDeck].sort(() => Math.random() - 0.5);
     setShuffledDeck(shuffled);
     setCurrentCardIndex(0);
@@ -46,7 +80,7 @@ const FlashcardDeckContent: React.FC = () => {
     setSkippedCount(0);
     setAnsweredCards({});
     setIsFlipped(false);
-  }, [selectedCategories]);
+  }, [selectedCategories, mode, storedSentences]);
 
   useEffect(() => {
     shuffleDeck();
@@ -116,7 +150,9 @@ const FlashcardDeckContent: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 text-white p-8">
       <div className="max-w-4xl mx-auto">
         <Link href="/italian" className="text-white hover:text-gray-200 mb-8 inline-block">&larr; Back to Italian</Link>
-        <h1 className="text-4xl font-bold mb-4 text-center">Flashcard Practice</h1>
+        <h1 className="text-4xl font-bold mb-4 text-center">
+          {mode === 'stored' ? 'Stored Sentences Practice' : 'Flashcard Practice'}
+        </h1>
         <div className="mb-8 text-center">
           <h2 className="text-2xl font-semibold mb-2">Selected Categories:</h2>
           <p className="text-lg">
@@ -175,10 +211,10 @@ const FlashcardDeckContent: React.FC = () => {
   );
 };
 
-const FlashcardDeck: React.FC = () => {
+const FlashcardDeck: React.FC<FlashcardDeckProps> = ({ mode }) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <FlashcardDeckContent />
+      <FlashcardDeckContent mode={mode} />
     </Suspense>
   );
 };

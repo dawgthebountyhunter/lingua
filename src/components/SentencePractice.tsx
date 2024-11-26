@@ -118,14 +118,12 @@ const SentencePracticeContent: React.FC = () => {
       const response = await axios.post('/api/sentences', {
         english: newSentence,
         italian: translatedSentence,
-        categories: selectedNewCategories
       });
 
       if (response.data.success) {
         setFeedback('Sentence stored successfully!');
         setNewSentence('');
         setTranslatedSentence('');
-        setSelectedNewCategories([]);
       } else {
         setFeedback('Failed to store sentence.');
       }
@@ -209,34 +207,11 @@ const SentencePracticeContent: React.FC = () => {
               <div className="mt-4">
                 <p className="text-lg">Translated Sentence: <strong>{translatedSentence}</strong></p>
                 
-                <div className="mt-4">
-                  <h3 className="text-lg mb-2">Select Categories:</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {vocabularyData.map(category => (
-                      <button
-                        key={category.category}
-                        onClick={() => setSelectedNewCategories(prev => 
-                          prev.includes(category.category)
-                            ? prev.filter(cat => cat !== category.category)
-                            : [...prev, category.category]
-                        )}
-                        className={`px-3 py-1 rounded ${
-                          selectedNewCategories.includes(category.category)
-                            ? 'bg-blue-600'
-                            : 'bg-blue-400'
-                        }`}
-                      >
-                        {category.category}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
                 <button 
                   onClick={handleLogSentence} 
-                  disabled={isStoring || selectedNewCategories.length === 0}
+                  disabled={isStoring}
                   className={`bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full transition duration-300 mt-4 ${
-                    (isStoring || selectedNewCategories.length === 0) ? 'opacity-50 cursor-not-allowed' : ''
+                    isStoring ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
                   {isStoring ? 'Storing...' : 'Store Sentence'}

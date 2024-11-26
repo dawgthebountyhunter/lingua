@@ -18,4 +18,26 @@ export async function POST(request: Request) {
     console.error('Error storing sentence:', error);
     return NextResponse.json({ success: false, error: 'Failed to store sentence' }, { status: 500 });
   }
+}
+
+export async function GET() {
+  try {
+    const query = `
+      SELECT * FROM sentences
+      ORDER BY created_at DESC
+    `;
+    
+    const result = await pool.query(query);
+    
+    return NextResponse.json({ 
+      success: true, 
+      sentences: result.rows 
+    });
+  } catch (error) {
+    console.error('Error fetching sentences:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch sentences' }, 
+      { status: 500 }
+    );
+  }
 } 
